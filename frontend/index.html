@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Mental Health Prediction | AI Analytics Dashboard</title>
+  <meta name="description" content="AI-assisted mental health risk assessment and wellness score prediction for students based on academic, lifestyle, and social media habits.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Background Glow Accents -->
+  <div class="bg-glow bg-glow-1" aria-hidden="true"></div>
+  <div class="bg-glow bg-glow-2" aria-hidden="true"></div>
+
+  <!-- Header / Navigation -->
+  <header class="app-header">
+    <div class="container header-container">
+      <div class="brand">
+        <div class="brand-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>
+            <path d="M12 5v4"/>
+            <path d="M10 7h4"/>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <h1 class="brand-title">Student Mental Health Prediction</h1>
+          <p class="brand-subtitle">AI-assisted mental health risk assessment for students</p>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <div class="status-badge" id="apiStatusBadge">
+          <span class="status-dot" id="apiStatusDot"></span>
+          <span class="status-text" id="apiStatusText">Checking API...</span>
+        </div>
+        <a href="/docs" target="_blank" rel="noopener noreferrer" class="btn-api-docs" title="View OpenAPI / Swagger Documentation">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="16" y1="13" x2="8" y2="13"></line>
+            <line x1="16" y1="17" x2="8" y2="17"></line>
+            <polyline points="10 9 9 9 8 9"></polyline>
+          </svg>
+          API Docs
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="main-content">
+    <div class="container">
+      <!-- Hero Section -->
+      <section class="hero-section">
+        <div class="hero-content">
+          <div class="hero-tag">
+            <span class="pulse-spark"></span> Machine Learning Healthcare Analytics
+          </div>
+          <h2 class="hero-title">Understand Student Mental Health</h2>
+          <p class="hero-description">
+            Enter the student's lifestyle and academic information below to generate a machine-learning-based mental health score prediction powered by a trained Random Forest model.
+          </p>
+
+          <!-- Quick Test Presets -->
+          <div class="presets-wrapper">
+            <span class="presets-label">Quick Presets:</span>
+            <div class="preset-buttons">
+              <button type="button" class="btn-preset" data-preset="balanced">
+                <span class="preset-emoji">🌱</span> Balanced Scholar
+              </button>
+              <button type="button" class="btn-preset" data-preset="stressed">
+                <span class="preset-emoji">⚡</span> Exam Crammer
+              </button>
+              <button type="button" class="btn-preset" data-preset="burnout">
+                <span class="preset-emoji">📱</span> Digital Fatigue
+              </button>
+              <button type="button" class="btn-preset" data-preset="athlete">
+                <span class="preset-emoji">🏃</span> Active Student
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Main Form & Results Layout -->
+      <div class="dashboard-grid">
+        <!-- Form Column -->
+        <div class="form-column">
+          <form id="predictionForm" class="prediction-card" novalidate>
+            <div class="card-header">
+              <div class="card-title-group">
+                <h3 class="card-title">Student Information Assessment</h3>
+                <p class="card-subtitle">Fill in the student's academic, digital lifestyle, and daily wellness habits.</p>
+              </div>
+              <button type="button" id="resetBtn" class="btn-reset" title="Reset all fields to defaults">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"></path>
+                  <path d="M21 3v5h-5"></path>
+                  <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"></path>
+                  <path d="M8 16H3v5"></path>
+                </svg>
+                Reset
+              </button>
+            </div>
+
+            <!-- Group 1: Demographics & Education -->
+            <fieldset class="form-group-section">
+              <legend class="group-legend">
+                <span class="legend-icon">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                  </svg>
+                </span>
+                1. Student Demographics & Education
+              </legend>
+
+              <div class="fields-grid grid-2">
+                <!-- Age -->
+                <div class="field-item">
+                  <label for="age" class="field-label">
+                    Age <span class="required-star">*</span>
+                  </label>
+                  <div class="input-with-suffix">
+                    <input type="number" id="age" name="age" min="10" max="100" value="21" required class="form-input">
+                    <span class="input-suffix">yrs</span>
+                  </div>
+                  <span class="field-helper">Valid range: 10 – 100 years</span>
+                  <div class="field-error" id="ageError"></div>
+                </div>
+
+                <!-- Gender -->
+                <div class="field-item">
+                  <label class="field-label">
+                    Gender <span class="required-star">*</span>
+                  </label>
+                  <div class="segmented-control" role="radiogroup" aria-label="Gender">
+                    <label class="segmented-option">
+                      <input type="radio" name="gender" value="Female" checked>
+                      <span class="segmented-btn">Female</span>
+                    </label>
+                    <label class="segmented-option">
+                      <input type="radio" name="gender" value="Male">
+                      <span class="segmented-btn">Male</span>
+                    </label>
+                  </div>
+                  <span class="field-helper">Select student's gender</span>
+                </div>
+
+                <!-- Country -->
+                <div class="field-item">
+                  <label for="country" class="field-label">
+                    Country / Region <span class="required-star">*</span>
+                  </label>
+                  <div class="select-wrapper">
+                    <select id="country" name="country" required class="form-select">
+                      <optgroup label="Top Modeled Countries">
+                        <option value="USA" selected>United States (USA)</option>
+                        <option value="India">India</option>
+                        <option value="Canada">Canada</option>
+                        <option value="UK">United Kingdom (UK)</option>
+                        <option value="Australia">Australia</option>
+                        <option value="Germany">Germany</option>
+                        <option value="France">France</option>
+                        <option value="Mexico">Mexico</option>
+                        <option value="Turkey">Turkey</option>
+                      </optgroup>
+                      <optgroup label="Other Countries">
+                        <option value="Other">Other / International</option>
+                        <option value="Brazil">Brazil</option>
+                        <option value="China">China</option>
+                        <option value="Japan">Japan</option>
+                        <option value="South Korea">South Korea</option>
+                        <option value="Spain">Spain</option>
+                        <option value="Italy">Italy</option>
+                        <option value="Nigeria">Nigeria</option>
+                        <option value="Pakistan">Pakistan</option>
+                        <option value="Bangladesh">Bangladesh</option>
+                      </optgroup>
+                    </select>
+                  </div>
+                  <span class="field-helper">Top 9 countries are directly modeled</span>
+                </div>
+
+                <!-- Academic Level -->
+                <div class="field-item">
+                  <label for="academic_level" class="field-label">
+                    Academic Level <span class="required-star">*</span>
+                  </label>
+                  <div class="select-wrapper">
+                    <select id="academic_level" name="academic_level" required class="form-select">
+                      <option value="Undergraduate" selected>Undergraduate (Bachelor's)</option>
+                      <option value="Graduate">Graduate (Master's / PhD)</option>
+                      <option value="High School">High School</option>
+                    </select>
+                  </div>
+                  <span class="field-helper">Current enrollment level</span>
+                </div>
+              </div>
+            </fieldset>
+
+            <!-- Group 2: Digital Lifestyle & Social Media -->
+            <fieldset class="form-group-section">
+              <legend class="group-legend">
+                <span class="legend-icon">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect width="14" height="20" x="5" y="2" rx="2" ry="2"></rect>
+                    <path d="M12 18h.01"></path>
+                  </svg>
+                </span>
+                2. Digital Habits & Social Media Usage
+              </legend>
+
+              <div class="fields-grid grid-2">
+                <!-- Most Used Platform -->
+                <div class="field-item">
+                  <label for="most_used_platform" class="field-label">
+                    Primary Social Platform <span class="required-star">*</span>
+                  </label>
+                  <div class="select-wrapper">
+                    <select id="most_used_platform" name="most_used_platform" required class="form-select">
+                      <option value="Instagram" selected>Instagram</option>
+                      <option value="YouTube">YouTube</option>
+                      <option value="TikTok">TikTok</option>
+                      <option value="Snapchat">Snapchat</option>
+                      <option value="Twitter">Twitter / X</option>
+                      <option value="Facebook">Facebook</option>
+                      <option value="LinkedIn">LinkedIn</option>
+                      <option value="WhatsApp">WhatsApp</option>
+                      <option value="WeChat">WeChat</option>
+                      <option value="LINE">LINE</option>
+                      <option value="KakaoTalk">KakaoTalk</option>
+                      <option value="VKontakte">VKontakte</option>
+                    </select>
+                  </div>
+                  <span class="field-helper">Platform with highest daily time</span>
+                </div>
+
+                <!-- Purpose of Use -->
+                <div class="field-item">
+                  <label for="purpose_of_use" class="field-label">
+                    Primary Purpose of Use <span class="required-star">*</span>
+                  </label>
+                  <div class="select-wrapper">
+                    <select id="purpose_of_use" name="purpose_of_use" required class="form-select">
+                      <option value="Entertainment" selected>Entertainment</option>
+                      <option value="Education">Education & Learning</option>
+                      <option value="Networking">Networking & Career</option>
+                      <option value="News">News & Information</option>
+                    </select>
+                  </div>
+                  <span class="field-helper">Main intent when opening social apps</span>
+                </div>
+
+                <!-- Daily Usage Hours (Slider + Input Sync) -->
+                <div class="field-item">
+                  <div class="label-row">
+                    <label for="avg_daily_usage_hours" class="field-label">
+                      Daily Social Media Usage <span class="required-star">*</span>
+                    </label>
+                    <span class="slider-val-badge" id="val_daily_usage">3.5 hrs</span>
+                  </div>
+                  <div class="slider-sync-group">
+                    <input type="range" id="range_daily_usage" min="0" max="16" step="0.5" value="3.5" class="form-range" aria-label="Daily Social Media Usage Slider">
+                    <input type="number" id="avg_daily_usage_hours" name="avg_daily_usage_hours" min="0" max="24" step="0.5" value="3.5" required class="sync-number-input">
+                  </div>
+                  <span class="field-helper">Average hours spent across social networks</span>
+                  <div class="field-error" id="usageHoursError"></div>
+                </div>
+
+                <!-- Daily Unlocks (Slider + Input Sync) -->
+                <div class="field-item">
+                  <div class="label-row">
+                    <label for="daily_unlocks" class="field-label">
+                      Daily Phone Unlocks <span class="required-star">*</span>
+                    </label>
+                    <span class="slider-val-badge" id="val_unlocks">75 times</span>
+                  </div>
+                  <div class="slider-sync-group">
+                    <input type="range" id="range_unlocks" min="0" max="250" step="5" value="75" class="form-range" aria-label="Daily Phone Unlocks Slider">
+                    <input type="number" id="daily_unlocks" name="daily_unlocks" min="0" max="1000" step="1" value="75" required class="sync-number-input">
+                  </div>
+                  <span class="field-helper">Frequency of checking device screen daily</span>
+                  <div class="field-error" id="unlocksError"></div>
+                </div>
+              </div>
+            </fieldset>
+
+            <!-- Group 3: Health, Academics & Daily Wellness -->
+            <fieldset class="form-group-section">
+              <legend class="group-legend">
+                <span class="legend-icon">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+                  </svg>
+                </span>
+                3. Study, Physical Activity & Wellness
+              </legend>
+
+              <div class="fields-grid grid-2">
+                <!-- Study Hours -->
+                <div class="field-item">
+                  <div class="label-row">
+                    <label for="study_hours" class="field-label">
+                      Daily Study Hours <span class="required-star">*</span>
+                    </label>
+                    <span class="slider-val-badge" id="val_study_hours">4.5 hrs</span>
+                  </div>
+                  <div class="slider-sync-group">
+                    <input type="range" id="range_study_hours" min="0" max="16" step="0.5" value="4.5" class="form-range" aria-label="Study Hours Slider">
+                    <input type="number" id="study_hours" name="study_hours" min="0" max="24" step="0.5" value="4.5" required class="sync-number-input">
+                  </div>
+                  <span class="field-helper">Focused academic study outside class</span>
+                  <div class="field-error" id="studyHoursError"></div>
+                </div>
+
+                <!-- Physical Activity Hours -->
+                <div class="field-item">
+                  <div class="label-row">
+                    <label for="physical_activity_hours" class="field-label">
+                      Daily Physical Activity <span class="required-star">*</span>
+                    </label>
+                    <span class="slider-val-badge" id="val_activity_hours">1.5 hrs</span>
+                  </div>
+                  <div class="slider-sync-group">
+                    <input type="range" id="range_activity_hours" min="0" max="8" step="0.5" value="1.5" class="form-range" aria-label="Physical Activity Slider">
+                    <input type="number" id="physical_activity_hours" name="physical_activity_hours" min="0" max="24" step="0.5" value="1.5" required class="sync-number-input">
+                  </div>
+                  <span class="field-helper">Exercise, sports, walking, gym</span>
+                  <div class="field-error" id="activityHoursError"></div>
+                </div>
+
+                <!-- Sleep Hours Per Night -->
+                <div class="field-item">
+                  <div class="label-row">
+                    <label for="sleep_hours_per_night" class="field-label">
+                      Sleep Hours Per Night <span class="required-star">*</span>
+                    </label>
+                    <span class="slider-val-badge" id="val_sleep_hours">7.0 hrs</span>
+                  </div>
+                  <div class="slider-sync-group">
+                    <input type="range" id="range_sleep_hours" min="1" max="14" step="0.5" value="7.0" class="form-range" aria-label="Sleep Hours Slider">
+                    <input type="number" id="sleep_hours_per_night" name="sleep_hours_per_night" min="0" max="24" step="0.5" value="7.0" required class="sync-number-input">
+                  </div>
+                  <span class="field-helper">Average nighttime rest</span>
+                  <div class="field-error" id="sleepHoursError"></div>
+                </div>
+
+                <!-- Stress Level -->
+                <div class="field-item">
+                  <label class="field-label">
+                    Reported Stress Level <span class="required-star">*</span>
+                  </label>
+                  <div class="stress-selector" role="radiogroup" aria-label="Stress Level">
+                    <label class="stress-card stress-low">
+                      <input type="radio" name="stress_level" value="Low">
+                      <span class="stress-content">
+                        <span class="stress-bullet"></span>
+                        <span class="stress-name">Low</span>
+                      </span>
+                    </label>
+                    <label class="stress-card stress-medium">
+                      <input type="radio" name="stress_level" value="Medium" checked>
+                      <span class="stress-content">
+                        <span class="stress-bullet"></span>
+                        <span class="stress-name">Medium</span>
+                      </span>
+                    </label>
+                    <label class="stress-card stress-high">
+                      <input type="radio" name="stress_level" value="High">
+                      <span class="stress-content">
+                        <span class="stress-bullet"></span>
+                        <span class="stress-name">High</span>
+                      </span>
+                    </label>
+                    <label class="stress-card stress-vhigh">
+                      <input type="radio" name="stress_level" value="Very High">
+                      <span class="stress-content">
+                        <span class="stress-bullet"></span>
+                        <span class="stress-name">Very High</span>
+                      </span>
+                    </label>
+                  </div>
+                  <span class="field-helper">Self-reported academic & personal stress</span>
+                </div>
+              </div>
+            </fieldset>
+
+            <!-- Submit Action -->
+            <div class="form-actions">
+              <button type="submit" id="submitBtn" class="btn-predict">
+                <span class="btn-spinner" id="btnSpinner" aria-hidden="true"></span>
+                <svg class="btn-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
+                </svg>
+                <span id="btnText">Predict Mental Health</span>
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Result / Output Column -->
+        <div class="result-column">
+          <!-- Initial Placeholder Card -->
+          <div id="initialCard" class="info-card placeholder-card">
+            <div class="placeholder-graphic">
+              <div class="graphic-circle outer"></div>
+              <div class="graphic-circle middle"></div>
+              <div class="graphic-icon">
+                <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                  <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                </svg>
+              </div>
+            </div>
+            <h4 class="placeholder-title">Awaiting Assessment</h4>
+            <p class="placeholder-desc">
+              Adjust the student's metrics on the left and click <strong>Predict Mental Health</strong> to calculate their AI wellness score and risk categorization.
+            </p>
+            <div class="model-info-chip">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect>
+                <rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect>
+                <line x1="6" y1="6" x2="6.01" y2="6"></line>
+                <line x1="6" y1="18" x2="6.01" y2="18"></line>
+              </svg>
+              <span>Random Forest Regressor • Scikit-Learn 1.6</span>
+            </div>
+          </div>
+
+          <!-- Prediction Result Card (Visible on Success) -->
+          <div id="resultCard" class="info-card result-card" style="display: none;">
+            <div class="result-header">
+              <span class="result-badge-tag" id="resultStatusTag">Low Risk</span>
+              <span class="result-timestamp" id="resultTimestamp">Just now</span>
+            </div>
+
+            <!-- Score Display with Radial Meter -->
+            <div class="score-display-wrapper">
+              <div class="gauge-container">
+                <svg class="score-gauge" viewBox="0 0 120 120">
+                  <circle class="gauge-bg" cx="60" cy="60" r="50"></circle>
+                  <circle class="gauge-progress" id="gaugeProgress" cx="60" cy="60" r="50"></circle>
+                </svg>
+                <div class="gauge-center-content">
+                  <span class="score-number" id="scoreValue">0.00</span>
+                  <span class="score-denom">out of 10.0</span>
+                </div>
+              </div>
+
+              <div class="score-summary-text">
+                <h4 class="result-heading" id="resultHeading">Mental Health Score</h4>
+                <p class="result-tier-desc" id="resultTierDesc">
+                  Calculated based on 12 multidimensional lifestyle and academic behavioral factors.
+                </p>
+              </div>
+            </div>
+
+            <!-- Score Visual Spectrum Bar -->
+            <div class="spectrum-wrapper">
+              <div class="spectrum-labels">
+                <span class="spec-label high-risk-label">High Risk (0-4.9)</span>
+                <span class="spec-label mid-risk-label">Moderate (5.0-6.9)</span>
+                <span class="spec-label low-risk-label">Thriving (7.0-10)</span>
+              </div>
+              <div class="spectrum-bar">
+                <div class="spectrum-indicator" id="spectrumIndicator" style="left: 60%;"></div>
+              </div>
+            </div>
+
+            <!-- Insights / Contributing Factors Breakdown -->
+            <div class="factors-section">
+              <h5 class="factors-title">Behavioral Factor Highlights</h5>
+              <div class="factors-grid">
+                <div class="factor-item" id="factorSleep">
+                  <div class="factor-header">
+                    <span class="factor-name">Sleep Quality</span>
+                    <span class="factor-val" id="factorSleepVal">7.0 hrs</span>
+                  </div>
+                  <div class="factor-bar-bg">
+                    <div class="factor-bar-fill" id="factorSleepBar" style="width: 70%;"></div>
+                  </div>
+                </div>
+
+                <div class="factor-item" id="factorMedia">
+                  <div class="factor-header">
+                    <span class="factor-name">Digital Screen Burden</span>
+                    <span class="factor-val" id="factorMediaVal">3.5 hrs</span>
+                  </div>
+                  <div class="factor-bar-bg">
+                    <div class="factor-bar-fill" id="factorMediaBar" style="width: 45%;"></div>
+                  </div>
+                </div>
+
+                <div class="factor-item" id="factorStudy">
+                  <div class="factor-header">
+                    <span class="factor-name">Academic Dedication</span>
+                    <span class="factor-val" id="factorStudyVal">4.5 hrs</span>
+                  </div>
+                  <div class="factor-bar-bg">
+                    <div class="factor-bar-fill" id="factorStudyBar" style="width: 50%;"></div>
+                  </div>
+                </div>
+
+                <div class="factor-item" id="factorStress">
+                  <div class="factor-header">
+                    <span class="factor-name">Stress State</span>
+                    <span class="factor-val" id="factorStressVal">Medium</span>
+                  </div>
+                  <div class="factor-bar-bg">
+                    <div class="factor-bar-fill" id="factorStressBar" style="width: 50%;"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Key Recommendation Advice Note -->
+            <div class="recommendation-box" id="recommendationBox">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="16" x2="12" y2="12"></line>
+                <line x1="12" y1="8" x2="12.01" y2="8"></line>
+              </svg>
+              <div class="recommendation-content" id="recommendationText">
+                Balanced behavioral profile observed. Maintaining consistent sleep and digital boundaries supports sustainable wellness.
+              </div>
+            </div>
+          </div>
+
+          <!-- Error Card (Visible on API Failure) -->
+          <div id="errorCard" class="info-card error-card" style="display: none;">
+            <div class="error-icon-wrapper">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="8" x2="12" y2="12"></line>
+                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+              </svg>
+            </div>
+            <h4 class="error-title">Unable to Generate Prediction</h4>
+            <p class="error-message" id="errorMessage">
+              The backend API could not be reached or an error occurred while processing the request.
+            </p>
+            <div class="error-actions">
+              <button type="button" id="retryBtn" class="btn-retry">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 2v6h-6"></path>
+                  <path d="M3 12a9 9 0 0 1 15-6.7L21 8"></path>
+                  <path d="M3 22v-6h6"></path>
+                  <path d="M21 12a9 9 0 0 1-15 6.7L3 16"></path>
+                </svg>
+                Retry Request
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Disclaimer Section -->
+      <section class="disclaimer-section">
+        <div class="disclaimer-content">
+          <svg class="disclaimer-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"></path>
+            <line x1="12" y1="9" x2="12" y2="13"></line>
+            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+          </svg>
+          <p>
+            <strong>Disclaimer:</strong> This tool is intended for educational and research purposes only and is not a substitute for professional mental health assessment or medical advice. If you or someone you know is experiencing severe distress, please consult a certified mental health professional or campus counseling services.
+          </p>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- Minimalist Footer -->
+  <footer class="app-footer">
+    <div class="container footer-container">
+      <div class="footer-left">
+        <span class="footer-brand">Student Mental Health Prediction</span>
+        <span class="footer-sep">•</span>
+        <span class="footer-note">Machine Learning & Healthcare Analytics Project</span>
+      </div>
+      <div class="footer-right">
+        <span class="footer-tech">Powered by FastAPI & Scikit-Learn Random Forest</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js" defer></script>
+</body>
+</html>
