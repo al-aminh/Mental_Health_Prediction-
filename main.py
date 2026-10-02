@@ -7,7 +7,11 @@ from fastapi.responses import FileResponse
 from pydantic import BaseModel, Field
 from typing import Literal
 
-model = joblib.load("Mental_Health_Model.pkl")
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+FRONTEND_DIR = os.path.join(BASE_DIR, "frontend")
+MODEL_PATH = os.path.join(BASE_DIR, "Mental_Health_Model.pkl")
+
+model = joblib.load(MODEL_PATH)
 top_countries = ['Other','India','USA','Canada','Australia','UK','Germany','Mexico','Turkey','France']
 
 app = FastAPI(
@@ -24,9 +28,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-FRONTEND_DIR = os.path.join(BASE_DIR, "frontend")
 
 class StudentData(BaseModel):
     age                     : int   = Field(..., ge=0, le=100, description="")
@@ -95,4 +96,5 @@ def predict(data: StudentData):
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True)
+    port = int(os.environ.get("PORT", 8000))
+    uvicorn.run("main:app", host="0.0.0.0", port=port, reload=True)
